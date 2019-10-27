@@ -1,0 +1,7 @@
+export const LOGIN = 'LOGIN'
+export const ROOMS = 'ROOMS'
+export const ORDERS = 'ORDERS'
+export const ADDROOM = 'ADDROOM'
+export const CUSTOMER = 'CUSTOMER'
+export const ADDCUSTOMER = 'ADDCUSTOMER'
+export const DETAILCUSTOMER = 'DETAILCUSTOMER'
