@@ -1,101 +1,85 @@
 import React, { Component } from 'react';
-import { Image, View } from 'react-native';
 import { createAppContainer } from 'react-navigation'
 import { createStackNavigator } from 'react-navigation-stack';
 import { Icon } from 'native-base';
 import Icons from 'react-native-vector-icons/FontAwesome';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 
-import Home from './src/screens/Home'
-import AddRoom from './src/screens/AddRoom'
-import Login from './src/screens/Login';
+import Room from './src/screens/Room'
+import Login from './src/screens/Login'
 import Checkin from './src/screens/Checkin'
 import Customer from './src/screens/Customer'
 import Setting from './src/screens/Setting'
-import AddCustomer from './src/screens/AddCustomer'
-import UpdateCustomer from './src/screens/updateCustomer'
+import Loading from './src/screens/Loading'
 
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-
-const MainApp = createBottomTabNavigator(
+const MainApp = createMaterialBottomTabNavigator(
   {
     Checkin: {
       screen: Checkin,
       navigationOptions: {
         tabBarLabel: 'Checkin',
-        tabBarIcon: <Icon name="checkmark-circle" />,
-        activeTintColor: '#fff',
-        inactiveTintColor: '#95afc0',
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="checkmark-circle" style={{ color: tintColor, fontSize: 22 }} />),
       }
     },
     Room: {
-      screen: Home,
+      screen: Room,
       navigationOptions: {
         tabBarLabel: 'Room',
-        tabBarIcon: <Icons name="bed" style={{ fontSize: 20 }} />,
-        activeTintColor: '#fff',
-        inactiveTintColor: '#95afc0',
+        tabBarIcon: ({ tintColor }) => (
+          <Icons name="bed" style={{ color: tintColor, fontSize: 22 }} />),
       }
     },
     Customer: {
       screen: Customer,
       navigationOptions: {
         tabBarLabel: 'Customer',
-        tabBarIcon: <Icons name="address-card" style={{ fontSize: 20 }} />,
-        activeTintColor: '#fff',
-        inactiveTintColor: '#95afc0',
+        tabBarIcon: ({ tintColor }) => (
+          <Icons name="address-card" style={{ color: tintColor, fontSize: 22 }} />),
       }
     },
     Setting: {
       screen: Setting,
       navigationOptions: {
         tabBarLabel: 'Setting',
-        tabBarIcon: <Icon name="settings" />,
-        activeTintColor: '#fff',
-        inactiveTintColor: '#95afc0',
+        tabBarIcon: ({ tintColor }) => (
+          <Icon name="settings" style={{ color: tintColor, fontSize: 22 }} />),
       }
-    }
+    },
   },
   {
-    defaultNavigationOptions: ({ navigation }) => ({
-    }),
-    tabBarOptions: {
-      activeTintColor: '#FF6F00',
-      inactiveTintColor: '#263238',
-    },
+    initialRouteName: 'Room',
+    activeColor: '#fff',
+    inactiveColor: '#2d3436',
+    barStyle: {
+      backgroundColor: '#fdcb6e'
+    }
+
+
   }
 );
 const AppNavigator = createStackNavigator({
-
+  Loading: {
+    screen: Loading,
+    navigationOptions: {
+      header: null,
+    }
+  },
   Login: {
     screen: Login,
     navigationOptions: {
       header: null
     }
   },
-  Home: {
+  Room: {
     screen: MainApp,
     navigationOptions: {
       header: null
     }
   },
-  AddRoom: {
-    screen: AddRoom,
-    navigationOptions: {
-      header: null
-    }
-  },
-  AddCustomer: {
-    screen: AddCustomer,
-    navigationOptions: {
-      header: null
-    }
-  },
-  UpdateCustomer: {
-    screen: UpdateCustomer,
-    navigationOptions: {
-      header: null
-    }
-  }
+
+}, {
+  initialRouteName: 'Loading',
 });
 
 export default createAppContainer(AppNavigator);

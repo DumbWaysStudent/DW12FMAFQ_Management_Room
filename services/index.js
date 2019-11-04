@@ -58,13 +58,18 @@ app.group("/api/v2", (router) => {
     router.put('/customers/edit/:customerId', customerController.edit)
     router.get('/customers/detail/:customerId', customerController.detail)
 
-    // Rooms Api
+    // Rooms API
     router.get('/rooms', roomController.show)
     router.post('/rooms/add', roomController.add)
+    router.put('/rooms/edit/:roomId', roomController.edit)
+    router.get('/rooms/detail/:roomId', roomController.detail)
 
     // Orders API
-    router.get('/orders', orderController.show)
-    router.get('/orders/check/:roomId', orderController.checkRoom)
+    router.get('/orders/checkin', orderController.detail)
+    router.get('/orders/checkroom/:roomId', orderController.checkRoom)
+    // router.get('/orders/check', orderController.getOrders)
+    router.post('/orders/add', authenticating, orderController.checkin)
+    router.put('/orders/edit/:id', orderController.edit)
 
 })
 

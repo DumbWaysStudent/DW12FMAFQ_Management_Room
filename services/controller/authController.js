@@ -28,17 +28,28 @@ exports.login = async (req, res) => {
   else {
     res.send({
       error: true,
-      message: 'wrong'
+      message: 'Email is not valid'
     })
   }
 }
 
 exports.register = async (req, res) => {
-
-  const signUp = await user.create(req.body)
-  const token = jwt.sign(signUp.id, 'my-secret-key')
-  res.send({
-    signUp
-    , token
+  const email = req.body.email
+  const checkUser = await user.findOne({
+    where: {
+      email
+    }
   })
+  if (checkUser) {
+    res.send({
+      message: 'Email is already registered'
+    })
+  } else {
+    const signUp = await user.create(req.body)
+    const token = jwt.sign(signUp.id, 'my-secret-key')
+    res.send({
+      data:
+        email, token
+    })
+  }
 }

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ImageBackground, KeyboardAvoidingView, TouchableOpacity, Dimensions, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image, ImageBackground, KeyboardAvoidingView, TouchableOpacity, Dimensions, AsyncStorage } from 'react-native';
 import { Item, Input } from 'native-base';
-import * as actionAuthentication from '../redux/actions/actionsAuthentication'
+import Icon from 'react-native-vector-icons/AntDesign';
+import Icons from 'react-native-vector-icons/Octicons';
+import Icon1 from 'react-native-vector-icons/FontAwesome'; //eye, eye-slash
+import * as actionAuthentication from '../redux/actions/actionAuthentications'
 import { connect } from 'react-redux'
 
 class Login extends Component {
@@ -10,67 +13,70 @@ class Login extends Component {
     this.state = {
       inputUsername: '',
       inputPassword: null,
-      showPassword: false
+      showPassword: 'input'
     };
   }
-
   authentication = async () => {
-    console.log(this.state.inputPassword)
-    console.log(this.state.inputUsername)
     await this.props.authentication(
       this.state.inputUsername,
       this.state.inputPassword
     )
-    const data = this.props.authenticationLocal.user.token
+    const data = this.props.authenticationLocal.user
     console.log(data)
-    await AsyncStorage.setItem('user-token', data)
-    this.props.navigation.navigate('Home')
+    await AsyncStorage.multiSet([
+      ['user', data.checkUser.name],
+      ['user-token', data.token],
+      ['image', data.checkUser.image],
+      ['email', data.checkUser.email]
+    ])
+    this.props.navigation.navigate('Loading')
   }
 
   render() {
     return (
-      <SafeAreaView>
-        <View style={styles.container}>
-          <ImageBackground source={{ uri: 'https://i1.wp.com/www.heibogor.com/wp-content/uploads/2019/06/royal-safari-garden.jpg?fit=1280%2C906&ssl=1' }} style={{ width: '100%', height: 200 }}>
+      <ImageBackground source={require('../assets/icon/hotel.jpg')} style={styles.imgBackground}>
+        <SafeAreaView style={styles.imgHeader}>
+          <View style={styles.container}>
             <View style={[styles.textInfo, styles.textInfoTop]}>
-              <Text style={styles.title}>SigIn with your account</Text>
+              <Text style={styles.title}>Login</Text>
             </View>
-          </ImageBackground>
-          <KeyboardAvoidingView behavior='position'>
-            <View style={styles.form}>
-              <Item rounded style={styles.formItem}>
-                <Input
-                  value={this.state.inputUsername}
-                  onChangeText={(text) => this.setState({ inputUsername: text })}
-                  autoCapitalize='none'
-                  keyboardType='email-address'
-                  placeholder='Input your email' />
-              </Item>
-              <Item rounded style={styles.formItem}>
-                <Input
-                  value={this.state.inputPassword}
-                  onChangeText={(text) => this.setState({ inputPassword: text })}
-                  secureTextEntry={true}
-                  keyboardType='default'
-                  placeholder='Input your password' />
-              </Item>
-              {/* <Button
-            title={"Let's Get Started"}
-            onHandleButton={() => this.authentication()} /> */}
-              <TouchableOpacity style={{ padding: 10, backgroundColor: 'blue', marginTop: 30, borderRadius: 8 }} onPress={this.authentication}>
-                <Text style={{ color: '#fff', alignSelf: 'center', fontSize: 16, fontWeight: 'bold' }}>Login</Text>
-              </TouchableOpacity>
+            <KeyboardAvoidingView behavior='position'>
+              <Image source={require('../assets/icon/building.png')} style={{ width: 90, height: 90, alignSelf: 'center' }}></Image>
+              <View style={styles.form}>
+                <Item style={styles.formItem}>
+                  <Icons name='mail' style={styles.iconMail} />
+                  <Input
+                    value={this.state.inputUsername}
+                    onChangeText={(text) => this.setState({ inputUsername: text })}
+                    autoCapitalize='none'
+                    keyboardType='email-address'
+                    placeholder='Input your email' />
+                </Item>
+                <Item style={styles.formItem}>
+                  <Icon name='lock1' style={styles.iconPassword} />
+                  <Input
+                    value={this.state.inputPassword}
+                    onChangeText={(text) => this.setState({ inputPassword: text })}
+                    secureTextEntry={true}
+                    keyboardType='default'
+                    placeholder='Input your password' />
+                </Item>
+                <TouchableOpacity style={styles.touchable} onPress={this.authentication}>
+                  <Text style={styles.txtLogin}>Login</Text>
+                </TouchableOpacity>
+              </View>
+            </KeyboardAvoidingView>
+            <View style={styles.textInfo}>
+              <Text style={styles.txtContent}> Don't have an account?
+                <Text
+                  onPress={() => this.handleSignUp()}
+                  style={styles.txtLink}> Sign Up
+                </Text>
+              </Text>
             </View>
-          </KeyboardAvoidingView>
-          <View style={styles.textInfo}>
-            <Text> Don't have an account?
-            <Text
-                onPress={() => this.handleSignUp()}
-                style={styles.txtLink}> Sign Up </Text>
-            </Text>
           </View>
-        </View>
-      </SafeAreaView >
+        </SafeAreaView >
+      </ImageBackground>
     );
   }
 }
@@ -87,35 +93,64 @@ const mapDispatchToProps = dispatch => {
 }
 
 const styles = StyleSheet.create({
+  imgBackground: {
+    width: '100%',
+    height: '100%'
+  },
+  imgHeader: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+  },
   container: {
-    // flex: 1,
     width: Dimensions.get('window').width,
   },
   textInfo: {
     alignItems: 'center',
-    padding: 10
+    padding: 10,
   },
-  textInfoTop: {
-    marginTop: 10,
-    marginBottom: 60
+  txtContent: {
+    color: '#ffffff'
   },
   title: {
-    fontSize: 25,
-    color: '#e58e26',
+    fontSize: 40,
+    color: '#7ed6df',
     fontWeight: 'bold',
-    marginRight: 120
+    fontFamily: 'joker',
+    alignSelf: 'center',
+    marginVertical: 20
   },
   formItem: {
-    marginBottom: 20
+    marginBottom: 20,
+    backgroundColor: '#ffffff',
+    borderRadius: 8
+  },
+  iconMail: {
+    fontSize: 20,
+    marginLeft: 10
+  },
+  iconPassword: {
+    fontSize: 20,
+    marginLeft: 10
+  },
+  touchable: {
+    padding: 10,
+    backgroundColor: '#7ed6df',
+    marginTop: 30,
+    borderRadius: 8
   },
   txtLink: {
-    color: 'blue'
+    color: '#4b7bec'
+  },
+  txtLogin: {
+    color: '#fff',
+    alignSelf: 'center',
+    fontSize: 20,
+    fontWeight: 'bold'
   },
   form: {
     paddingHorizontal: 20,
-    marginTop: 30
+    marginTop: 30,
   }
-
 });
 
 export default connect(

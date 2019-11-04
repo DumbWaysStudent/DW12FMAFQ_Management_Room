@@ -13,18 +13,21 @@ module.exports = {
         references: {
           model: 'customers',
           key: 'id'
-      },
-      onUpdate: 'cascade',
-      onDelete: 'cascade'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       room_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'rooms',
           key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
-      onUpdate: 'cascade',
-      onDelete: 'cascade'
+      is_done: {
+        type: Sequelize.BOOLEAN
       },
       is_booked: {
         type: Sequelize.BOOLEAN
@@ -37,11 +40,13 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: 'TIMESTAMP',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: 'TIMESTAMP',
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       }
     });
   },

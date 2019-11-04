@@ -1,4 +1,4 @@
-import * as types from './../types'
+import * as types from '../types'
 import axios from 'axios'
 
 export const getCustomer = (token) => ({
@@ -7,12 +7,14 @@ export const getCustomer = (token) => ({
         headers: { "Authorization": `Bearer ${token}` }
     })
 })
+
 export const addCustomer = (params) => ({
     type: types.ADDCUSTOMER,
     payload: axios.post(`http://192.168.0.22:5000/api/v2/customers/add`, {
         name: params.name,
         id_card: params.idCard,
-        phone_number: params.phoneNumber
+        phone_number: params.phoneNumber,
+        image: '',
     })
 })
 

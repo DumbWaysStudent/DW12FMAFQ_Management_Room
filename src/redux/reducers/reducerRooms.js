@@ -1,4 +1,4 @@
-import * as types from './../types'
+import * as types from '../types'
 
 const initialState = {
   isLoading: false,
@@ -10,7 +10,8 @@ const initialState = {
   isAddSuccess: false,
 
   rooms: [],
-  addRooms: []
+  addRooms: [],
+  detailRooms: []
 };
 
 const reducerGetRooms = (state = initialState, action) => {
@@ -46,6 +47,24 @@ const reducerGetRooms = (state = initialState, action) => {
         addRooms: action.payload.data
       }
     case `${types.ADDROOMS}_REJECTED`:
+      return {
+        ...state,
+        isAddError: true,
+        isAddLoading: false
+      }
+    case `${types.DETAILROOMS}_PENDING`:
+      return {
+        ...state,
+        isAddLoading: true
+      }
+    case `${types.DETAILROOMS}_FULFILLED`:
+      return {
+        ...state,
+        isAddLoading: false,
+        isAddSuccess: true,
+        detailCustomer: action.payload.data
+      }
+    case `${types.DETAILROOMS}_REJECTED`:
       return {
         ...state,
         isAddError: true,
